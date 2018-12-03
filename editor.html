@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+    <title>Title</title>
+
+    <style>
+
+        #main-container {
+            margin-top: 20px;
+            height: 100vh;
+        }
+
+        #main-img {
+            border: 1px solid lightgray;
+        }
+
+        .circle {
+            text-align: center;
+            color: white;
+            position: absolute;
+            background-color: black;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .piece-id {
+            font-size: 15px;
+            margin-right: 5px;
+        }
+
+        .piece-id::after {
+            content: " - "
+        }
+
+        .piece-title {
+            font-size: 25px;
+        }
+
+        .add-new-btn {
+            margin-top: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #pieces-scroller {
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        #pieces-col {
+            overflow-y: scroll;
+        }
+
+        /* Medium */
+        @media only screen and (min-width: 992px) {
+            #pieces-col {
+                height: 596.66px;
+            }
+        }
+
+        /* Large */
+        @media only screen and (min-width: 1200px) {
+            #pieces-col {
+                height: 730px;
+            }
+        }
+
+        #img-col {
+            margin: 0;
+            padding: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-container">
+    <div id="img-col" class="col-md-8">
+        <img id="main-img" style="width:100%;" src="http://www.mossberg.com/wp-content/uploads/2016/12/50120-M500-12Ga-Assembled.jpg">
+    </div>
+    <div class="col-md-4" id="pieces-col">
+        <button id="create-btn" class="btn btn-primary add-new-btn">Add new</button>
+        <h1>Pieces</h1>
+        <hr/>
+        <div class="piece" v-for="piece in pieces" v-on:mouseenter="piece.mouseEnter()"
+             v-on:mouseleave="piece.mouseExit()">
+            <span class="piece-id">{{piece.id}}</span>
+            <span class="piece-title">{{piece.name}}</span>
+            <ul class="piece-urls">
+                <li v-for="url in piece.urls">{{url}}</li>
+                <li>
+                    <button v-on:click="piece.addUrl()" class="btn btn-sm btn-default">+</button>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://unpkg.com/vue"></script>
+
+<script>
+
+    let app = new Vue({
+        el: "#main-container",
+        data: {
+            pieces: []
+        }
+    });
+
+    class DraggableTag {
+        constructor() {
+            this.id = app.pieces.length;
+            $("#img-col").append(`<div class="circle" style="left: 49%; top: 0%;" id="${this.id}"></div>`);
+            this.element = $("#" + this.id)
+            this.element.draggable().text(this.id);
+            this.name = "New example name"
+            this.urls = ["http://www.google.com"]
+        }
+
+        addUrl() {
+            this.urls.push(prompt());
+        }
+
+        mouseEnter() {
+            this.element.css("background-color", "orange");
+        }
+
+        mouseExit() {
+            this.element.css("background-color", "black");
+        }
+    }
+
+
+    $("#create-btn").click(function () {
+        app.pieces.push(new DraggableTag());
+    });
+
+
+</script>
+</body>
+
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+    <title>Title</title>
+
+    <style>
+        .highlight-poly {
+            fill-opacity: .4;
+            fill: yellow;
+        }
+
+        .new-poly {
+            fill-opacity: .7;
+            stroke: #646464;
+        }
+
+        #schematic {
+            width: 1000px;
+            background-size:1000px;
+            background-image:url("http://www.mossberg.com/wp-content/uploads/2016/12/50120-M500-12Ga-Assembled.jpg");
+        }
+
+        #pos {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+        <h1 id="pos"></h1>
+
+    <svg id="schematic" height="1000" width="1000">
+        <polygon id="0" class="highlight-poly new-poly" points="">
+
+        </polygon>
+    </svg>
+</body>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+
+    //118, 84
+    //78, 57
+    let cursorX;
+    let cursorY;
+    let currentPolyID = 0;
+    $("#schematic").mousemove(function(evt)  {
+        cursorX = evt.pageX - $(this).offset().left;
+        cursorY = evt.pageY - $(this).offset().top;
+
+        $("#pos").text(`X:${Math.round(cursorX)} Y:${Math.round(cursorY)}`);
+    });
+    $("#schematic").click(() => {
+        let el = $("#" + currentPolyID);
+        el.attr("points", el.attr("points") + `${cursorX},${cursorY} `);
+    });
+
+    $(document).keydown(evt => {
+        if (String.fromCharCode(evt.which) === "S") {
+            $("#" + currentPolyID).removeClass("new-poly");
+            $("svg").append(`<polygon id="${++currentPolyID}" class="highlight-poly new-poly" points=""> </polygon>`);
+            $("svg").html($("svg").html());
+        }
+    })
+</script>
+</html>
